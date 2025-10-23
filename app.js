@@ -1,9 +1,41 @@
 // 数据管理
 class DataManager {
     constructor() {
-        this.records = this.load('records') || [];
+        this.records = this.load('records') || this.mockRecords();
         this.categories = this.load('categories') || this.getDefaultCategories();
         this.budget = this.load('budget') || 0;
+    }
+
+    mockRecords() {
+        const now = new Date();
+        const records = [
+            {
+                id: now.getTime() - 86400000 * 2,
+                amount: 38.5,
+                categoryId: 1,
+                date: new Date(now.getTime() - 86400000 * 2).toISOString().slice(0,16),
+                note: '午餐',
+                photo: null
+            },
+            {
+                id: now.getTime() - 86400000,
+                amount: 12,
+                categoryId: 2,
+                date: new Date(now.getTime() - 86400000).toISOString().slice(0,16),
+                note: '地铁',
+                photo: null
+            },
+            {
+                id: now.getTime(),
+                amount: 99.9,
+                categoryId: 3,
+                date: now.toISOString().slice(0,16),
+                note: '买衣服',
+                photo: null
+            }
+        ];
+        this.save('records', records);
+        return records;
     }
 
     getDefaultCategories() {
@@ -313,8 +345,14 @@ function renderPieChart(data) {
             datasets: [{
                 data: Object.values(data).map(d => d.amount),
                 backgroundColor: [
-                    '#667eea', '#764ba2', '#f093fb', '#4facfe',
-                    '#43e97b', '#fa709a', '#fee140', '#30cfd0'
+                    '#A7C7E7', // 柔和蓝
+                    '#F7CAC9', // 柔和粉
+                    '#B5EAD7', // 柔和绿
+                    '#FFFACD', // 柔和黄
+                    '#FFDAB9', // 柔和橙
+                    '#E2D3F9', // 柔和紫
+                    '#F5E6C8', // 柔和米
+                    '#C1E1C1'  // 柔和青
                 ]
             }]
         },
