@@ -246,7 +246,17 @@ function updateBudgetDisplay() {
 // 统计页面
 function renderStats() {
     const period = document.querySelector('.date-btn.active').dataset.period;
-    const date = document.getElementById('statsDate').value || new Date().toISOString().split('T')[0];
+    let dateStr = document.getElementById('statsDate').value || new Date().toISOString().split('T')[0];
+    let date;
+    // 修复日维度统计日期解析问题
+    if (dateStr && period === 'day') {
+        const [year, month, day] = dateStr.split('-').map(Number);
+        date = new Date(year, month - 1, day);
+    } else if (dateStr) {
+        date = new Date(dateStr);
+    } else {
+        date = new Date();
+    }
     const records = dataManager.getRecordsByPeriod(period, date);
 
     const categoryStats = {};
@@ -423,3 +433,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initStatsPage();
     initTrendPage();
 });
+
