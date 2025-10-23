@@ -20,7 +20,7 @@ class DataManager {
     }
 
     save(key, data) {
-        document.cookie = `${key}=${JSON.stringify(data)}; max-age=31536000; path=/`;
+        document.cookie = `${key}=${encodeURIComponent(JSON.stringify(data))}; max-age=31536000; path=/`;
     }
 
     load(key) {
@@ -28,7 +28,11 @@ class DataManager {
         for (let cookie of cookies) {
             const [name, value] = cookie.trim().split('=');
             if (name === key) {
-                return JSON.parse(decodeURIComponent(value));
+                try {
+                    return JSON.parse(decodeURIComponent(value));
+                } catch (e) {
+                    return null;
+                }
             }
         }
         return null;

@@ -179,10 +179,10 @@ body {
     }
 }
 
+/* 页面内容居中和最大宽度限制 */
 .page-content {
     padding: 16px;
-    max-width: 600px;
-    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 /* 金额输入 */
@@ -268,16 +268,16 @@ textarea.input-field {
 .category-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 10px;
 }
 
 .category-item {
-    padding: 16px 10px;
+    padding: 10px 6px;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
     border: 1.5px solid rgba(255, 255, 255, 0.3);
-    border-radius: 18px;
+    border-radius: 14px;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -294,13 +294,13 @@ textarea.input-field {
 }
 
 .category-icon {
-    font-size: 26px;
-    margin-bottom: 6px;
+    font-size: 22px;
+    margin-bottom: 4px;
     display: block;
 }
 
 .category-name {
-    font-size: 11px;
+    font-size: 10px;
     color: #1d1d1f;
     font-weight: 500;
     letter-spacing: -0.1px;
@@ -453,6 +453,7 @@ canvas {
     border-radius: 18px;
     padding: 16px;
     border: 1px solid rgba(255, 255, 255, 0.3);
+    box-sizing: border-box;
 }
 
 .stats-item {
@@ -501,6 +502,7 @@ canvas {
     font-size: 13px;
     font-weight: 500;
     color: #1d1d1f;
+    box-sizing: border-box;
 }
 
 /* 时间线 */
@@ -635,5 +637,28 @@ canvas {
 }
 
 .modal-buttons button {
-    flex: 1;
+    width: 50%;
+    min-width: 0;
+    flex: none;
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+    .category-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+    .page-content {
+        padding: 8px;
+    }
+    .modal-content {
+        width: 98%;
+        max-width: 98vw;
+        padding: 12px;
+    }
+    .budget-header,
+    .bottom-nav {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
 }
