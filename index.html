@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>记账本</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://webapi.amap.com/maps?v=2.0&key=YOUR_AMAP_KEY"></script>
 </head>
 <body>
 <!-- 头部预算进度 -->
@@ -18,6 +19,7 @@
             <div class="budget-label">今日支出</div>
             <div class="budget-today" id="todaySpent">¥0.00</div>
         </div>
+        <div class="budget-badges" id="badgeBox"></div> <!-- 移到 budget-info 内部最后 -->
     </div>
     <div class="budget-progress">
         <div class="progress-bar">
@@ -40,6 +42,10 @@
     <div class="nav-item" data-page="trend">
         <span class="nav-icon">📈</span>
         <span class="nav-label">趋势</span>
+    </div>
+    <div class="nav-item" data-page="map">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">地图</span>
     </div>
     <div class="nav-item" data-page="list">
         <span class="nav-icon">📝</span>
@@ -123,6 +129,32 @@
 <div class="page" id="listPage">
     <div class="page-content">
         <div class="timeline" id="timeline"></div>
+    </div>
+</div>
+
+<!-- 地图页面 -->
+<div class="page" id="mapPage">
+    <div class="page-content">
+        <div class="map-controls">
+            <select id="mapPeriod" class="select-field">
+                <option value="7">最近7天</option>
+                <option value="30">最近30天</option>
+                <option value="90">最近90天</option>
+                <option value="all">全部</option>
+            </select>
+            <button class="btn-location" id="centerBtn">📍 当前位置</button>
+        </div>
+        <div id="mapContainer" class="map-container"></div>
+        <div class="map-stats">
+            <div class="map-stat-item">
+                <span class="map-stat-label">消费次数</span>
+                <span class="map-stat-value" id="mapCount">0</span>
+            </div>
+            <div class="map-stat-item">
+                <span class="map-stat-label">总金额</span>
+                <span class="map-stat-value" id="mapTotal">¥0.00</span>
+            </div>
+        </div>
     </div>
 </div>
 

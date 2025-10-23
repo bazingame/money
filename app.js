@@ -4,38 +4,39 @@ class DataManager {
         this.records = this.load('records') || this.mockRecords();
         this.categories = this.load('categories') || this.getDefaultCategories();
         this.budget = this.load('budget') || 0;
+        this.badges = this.load('badges') || this.mockBadges();
     }
 
     mockRecords() {
         const now = new Date();
-        const records = [
-            {
-                id: now.getTime() - 86400000 * 2,
-                amount: 38.5,
-                categoryId: 1,
-                date: new Date(now.getTime() - 86400000 * 2).toISOString().slice(0,16),
-                note: '午餐',
+        // 连续5天的mock数据
+        const records = [];
+        for (let i = 0; i < 5; i++) {
+            records.push({
+                id: now.getTime() - 86400000 * (4 - i),
+                amount: 20 + i * 5,
+                categoryId: (i % 3) + 1,
+                date: new Date(now.getTime() - 86400000 * (4 - i)).toISOString().slice(0,16),
+                note: `第${i+1}天记账`,
                 photo: null
-            },
-            {
-                id: now.getTime() - 86400000,
-                amount: 12,
-                categoryId: 2,
-                date: new Date(now.getTime() - 86400000).toISOString().slice(0,16),
-                note: '地铁',
-                photo: null
-            },
-            {
-                id: now.getTime(),
-                amount: 99.9,
-                categoryId: 3,
-                date: now.toISOString().slice(0,16),
-                note: '买衣服',
-                photo: null
-            }
-        ];
+            });
+        }
         this.save('records', records);
         return records;
+    }
+
+    mockBadges() {
+        // 1-5级奖励对应不同emoji
+        const badges = [
+            { level: 1, name: '连续3天', icon: '🥉', unlocked: true },
+            { level: 2, name: '连续5天', icon: '🥈', unlocked: true },
+            { level: 3, name: '连续10天', icon: '🥇', unlocked: false },
+            { level: 4, name: '连续30天', icon: '🏅', unlocked: false },
+            { level: 5, name: '连续100天', icon: '🎖️', unlocked: false },
+            { level: 6, name: '连续365天', icon: '🏆', unlocked: false }
+        ];
+        this.save('badges', badges);
+        return badges;
     }
 
     getDefaultCategories() {
@@ -114,6 +115,50 @@ class DataManager {
         return this.getRecordsByPeriod('day', now)
             .reduce((sum, record) => sum + record.amount, 0);
     }
+
+    getContinuousDays() {
+        // 统计连续记账天数
+        const dates = Array.from(new Set(this.records.map(r => r.date.slice(0,10)))).sort();
+        if (dates.length === 0) return 0;
+        let maxStreak = 1, streak = 1;
+        for (let i = 1; i < dates.length; i++) {
+            const prev = new Date(dates[i-1]);
+            const curr = new Date(dates[i]);
+            if ((curr - prev) === 86400000) {
+                streak++;
+            } else {
+                streak = 1;
+            }
+            if (streak > maxStreak) maxStreak = streak;
+        }
+        return maxStreak;
+    }
+
+    updateBadges() {
+        const days = this.getContinuousDays();
+        let changed = false;
+        this.badges.forEach(badge => {
+            if (!badge.unlocked) {
+                if (
+                    (badge.level === 1 && days >= 3) ||
+                    (badge.level === 2 && days >= 5) ||
+                    (badge.level === 3 && days >= 10) ||
+                    (badge.level === 4 && days >= 30) ||
+                    (badge.level === 5 && days >= 100) ||
+                    (badge.level === 6 && days >= 365)
+                ) {
+                    badge.unlocked = true;
+                    changed = true;
+                }
+            }
+        });
+        if (changed) this.save('badges', this.badges);
+    }
+
+    getBadges() {
+        this.updateBadges();
+        return this.badges;
+    }
 }
 
 const dataManager = new DataManager();
@@ -136,6 +181,7 @@ function initNavigation() {
             if (targetPage === 'stats') renderStats();
             if (targetPage === 'trend') renderTrend();
             if (targetPage === 'list') renderTimeline();
+            if (targetPage === 'record') updateBadgeDisplay(); // 切换到首页时刷新徽章
         });
     });
 }
@@ -280,6 +326,17 @@ function initBudgetDisplay() {
     updateBudgetDisplay();
 }
 
+function updateBadgeDisplay() {
+    const badgeBox = document.getElementById('badgeBox');
+    if (!badgeBox) return;
+    const badges = dataManager.getBadges();
+    badgeBox.innerHTML = badges
+        .filter(badge => badge.unlocked)
+        .map(badge =>
+            `<span class="badge unlocked" title="${badge.name}">${badge.icon}</span>`
+        ).join('');
+}
+
 function updateBudgetDisplay() {
     const spent = dataManager.getMonthlySpent();
     const budget = dataManager.budget;
@@ -299,6 +356,8 @@ function updateBudgetDisplay() {
             document.getElementById('progressFill').style.background = '#f59e0b';
         }
     }
+
+    updateBadgeDisplay();
 }
 
 // 统计页面
@@ -499,5 +558,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initBudgetDisplay();
     initStatsPage();
     initTrendPage();
+    updateBadgeDisplay(); // 首次加载时刷新徽章
 });
-
