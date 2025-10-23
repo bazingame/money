@@ -72,6 +72,12 @@ class DataManager {
         return this.getRecordsByPeriod('month', now)
             .reduce((sum, record) => sum + record.amount, 0);
     }
+
+    getTodaySpent() {
+        const now = new Date();
+        return this.getRecordsByPeriod('day', now)
+            .reduce((sum, record) => sum + record.amount, 0);
+    }
 }
 
 const dataManager = new DataManager();
@@ -106,7 +112,9 @@ function initRecordPage() {
     const uploadBtn = document.getElementById('uploadBtn');
     const saveBtn = document.getElementById('saveBtn');
 
-    dateInput.valueAsDate = new Date();
+    // 设置默认值为当前时间，格式为 yyyy-MM-ddTHH:mm
+    const now = new Date();
+    dateInput.value = now.toISOString().slice(0,16);
 
     renderCategories();
 
@@ -227,9 +235,11 @@ function initBudgetDisplay() {
 function updateBudgetDisplay() {
     const spent = dataManager.getMonthlySpent();
     const budget = dataManager.budget;
+    const todaySpent = dataManager.getTodaySpent();
 
     document.getElementById('budgetAmount').textContent = budget > 0 ? `¥${budget}` : '点击设置';
     document.getElementById('spentAmount').textContent = spent.toFixed(2);
+    document.getElementById('todaySpent').textContent = `¥${todaySpent.toFixed(2)}`;
 
     if (budget > 0) {
         const percentage = Math.min((spent / budget) * 100, 100);
@@ -246,11 +256,13 @@ function updateBudgetDisplay() {
 // 统计页面
 function renderStats() {
     const period = document.querySelector('.date-btn.active').dataset.period;
-    let dateStr = document.getElementById('statsDate').value || new Date().toISOString().split('T')[0];
+    let dateStr = document.getElementById('statsDate').value || new Date().toISOString().slice(0,16);
     let date;
-    // 修复日维度统计日期解析问题
+    // 修复日维度统计日期解析问题，兼容 datetime-local
     if (dateStr && period === 'day') {
-        const [year, month, day] = dateStr.split('-').map(Number);
+        // dateStr: yyyy-MM-ddTHH:mm
+        const [datePart] = dateStr.split('T');
+        const [year, month, day] = datePart.split('-').map(Number);
         date = new Date(year, month - 1, day);
     } else if (dateStr) {
         date = new Date(dateStr);
@@ -313,7 +325,8 @@ function renderStatsList(data) {
 }
 
 function initStatsPage() {
-    document.getElementById('statsDate').valueAsDate = new Date();
+    // 设置默认值为当前时间，格式为 yyyy-MM-ddTHH:mm
+    document.getElementById('statsDate').value = new Date().toISOString().slice(0,16);
 
     document.querySelectorAll('.date-btn').forEach(btn => {
         btn.addEventListener('click', () => {

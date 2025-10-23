@@ -10,8 +10,14 @@
 <!-- 头部预算进度 -->
 <div class="budget-header">
     <div class="budget-info">
-        <div class="budget-label">本月预算</div>
-        <div class="budget-amount" id="budgetAmount">未设置</div>
+        <div>
+            <div class="budget-label">本月预算</div>
+            <div class="budget-amount" id="budgetAmount">未设置</div>
+        </div>
+        <div>
+            <div class="budget-label">今日支出</div>
+            <div class="budget-today" id="todaySpent">¥0.00</div>
+        </div>
     </div>
     <div class="budget-progress">
         <div class="progress-bar">
@@ -57,7 +63,7 @@
 
         <div class="form-group">
             <label>日期</label>
-            <input type="date" id="dateInput" class="input-field">
+            <input type="datetime-local" id="dateInput" class="input-field">
         </div>
 
         <div class="form-group">
@@ -85,7 +91,7 @@
             <button class="date-btn active" data-period="day">日</button>
             <button class="date-btn" data-period="month">月</button>
             <button class="date-btn" data-period="year">年</button>
-            <input type="date" id="statsDate" class="date-input">
+            <input type="datetime-local" id="statsDate" class="date-input">
         </div>
         <canvas id="pieChart"></canvas>
         <div class="stats-list" id="statsList"></div>

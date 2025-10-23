@@ -102,6 +102,14 @@ body {
     font-weight: 500;
 }
 
+.budget-today {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--danger);
+    letter-spacing: -0.4px;
+    margin-top: 2px;
+}
+
 /* 底部导航 */
 .bottom-nav {
     position: fixed;
