@@ -115,6 +115,7 @@ function initRecordPage() {
     const photoInput = document.getElementById('photoInput');
     const uploadBtn = document.getElementById('uploadBtn');
     const saveBtn = document.getElementById('saveBtn');
+    const toggleCategoryBtn = document.getElementById('toggleCategoryBtn');
 
     // 设置默认值为当前时间，格式为 yyyy-MM-ddTHH:mm
     const now = new Date();
@@ -136,6 +137,17 @@ function initRecordPage() {
                 preview.appendChild(img);
             };
             reader.readAsDataURL(file);
+        }
+    });
+
+    // 类别展开/收起
+    toggleCategoryBtn.addEventListener('click', () => {
+        categoryGrid.classList.toggle('expanded');
+        const toggleText = toggleCategoryBtn.querySelector('.toggle-text');
+        if (categoryGrid.classList.contains('expanded')) {
+            toggleText.textContent = '收起';
+        } else {
+            toggleText.textContent = '展开更多';
         }
     });
 

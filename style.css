@@ -270,6 +270,13 @@ textarea.input-field {
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     margin-bottom: 10px;
+    max-height: 80px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.category-grid.expanded {
+    max-height: 1000px;
 }
 
 .category-item {
@@ -306,6 +313,38 @@ textarea.input-field {
     letter-spacing: -0.1px;
 }
 
+.btn-toggle-category {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.btn-toggle-category:active {
+    transform: scale(0.98);
+}
+
+.toggle-icon {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.category-grid.expanded ~ .btn-toggle-category .toggle-icon {
+    transform: rotate(180deg);
+}
+
 .btn-add-category {
     width: 100%;
     padding: 12px;
@@ -318,10 +357,11 @@ textarea.input-field {
     font-size: 13px;
     font-weight: 500;
     transition: all 0.2s;
+    display: none;
 }
 
-.btn-add-category:active {
-    transform: scale(0.98);
+.category-grid.expanded ~ .btn-add-category {
+    display: block;
 }
 
 /* 照片上传 */
@@ -637,9 +677,17 @@ canvas {
 }
 
 .modal-buttons button {
-    width: 50%;
-    min-width: 0;
-    flex: none;
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-buttons .btn-primary {
+    margin-top: 0;
 }
 
 /* 响应式调整 */
@@ -647,6 +695,7 @@ canvas {
     .category-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 6px;
+        max-height: 70px;
     }
     .page-content {
         padding: 8px;
