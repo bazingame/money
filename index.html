@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>记账本</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- 头部预算进度 -->
+<div class="budget-header">
+    <div class="budget-info">
+        <div class="budget-label">本月预算</div>
+        <div class="budget-amount" id="budgetAmount">未设置</div>
+    </div>
+    <div class="budget-progress">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="budget-spent">已花费: ¥<span id="spentAmount">0</span></div>
+    </div>
+</div>
+
+<!-- 底部导航 -->
+<div class="bottom-nav">
+    <div class="nav-item active" data-page="record">
+        <span class="nav-icon">✏️</span>
+        <span class="nav-label">记账</span>
+    </div>
+    <div class="nav-item" data-page="stats">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">统计</span>
+    </div>
+    <div class="nav-item" data-page="trend">
+        <span class="nav-icon">📈</span>
+        <span class="nav-label">趋势</span>
+    </div>
+    <div class="nav-item" data-page="list">
+        <span class="nav-icon">📝</span>
+        <span class="nav-label">明细</span>
+    </div>
+</div>
+
+<!-- 记账页面 -->
+<div class="page active" id="recordPage">
+    <div class="page-content">
+        <div class="amount-input">
+            <span class="currency">¥</span>
+            <input type="number" id="amountInput" placeholder="0.00" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label>类别</label>
+            <div class="category-grid" id="categoryGrid"></div>
+            <button class="btn-add-category" id="addCategoryBtn">+ 新增类别</button>
+        </div>
+
+        <div class="form-group">
+            <label>日期</label>
+            <input type="date" id="dateInput" class="input-field">
+        </div>
+
+        <div class="form-group">
+            <label>备注</label>
+            <textarea id="noteInput" class="input-field" placeholder="添加备注..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>照片</label>
+            <div class="photo-upload">
+                <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                <div class="photo-preview" id="photoPreview"></div>
+                <button class="btn-upload" id="uploadBtn">📷 上传照片</button>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="saveBtn">保存</button>
+    </div>
+</div>
+
+<!-- 统计页面 -->
+<div class="page" id="statsPage">
+    <div class="page-content">
+        <div class="date-selector">
+            <button class="date-btn active" data-period="day">日</button>
+            <button class="date-btn" data-period="month">月</button>
+            <button class="date-btn" data-period="year">年</button>
+            <input type="date" id="statsDate" class="date-input">
+        </div>
+        <canvas id="pieChart"></canvas>
+        <div class="stats-list" id="statsList"></div>
+    </div>
+</div>
+
+<!-- 趋势页面 -->
+<div class="page" id="trendPage">
+    <div class="page-content">
+        <div class="trend-controls">
+            <select id="trendCategory" class="select-field">
+                <option value="all">全部类别</option>
+            </select>
+            <select id="trendPeriod" class="select-field">
+                <option value="7">最近7天</option>
+                <option value="30">最近30天</option>
+                <option value="90">最近90天</option>
+            </select>
+        </div>
+        <canvas id="lineChart"></canvas>
+    </div>
+</div>
+
+<!-- 明细页面 -->
+<div class="page" id="listPage">
+    <div class="page-content">
+        <div class="timeline" id="timeline"></div>
+    </div>
+</div>
+
+<!-- 模态框 -->
+<div class="modal" id="categoryModal">
+    <div class="modal-content">
+        <h3>新增类别</h3>
+        <input type="text" id="newCategoryName" class="input-field" placeholder="类别名称">
+        <input type="text" id="newCategoryIcon" class="input-field" placeholder="图标 (emoji)">
+        <div class="modal-buttons">
+            <button class="btn-secondary" id="cancelCategoryBtn">取消</button>
+            <button class="btn-primary" id="confirmCategoryBtn">确认</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="budgetModal">
+    <div class="modal-content">
+        <h3>设置月度预算</h3>
+        <input type="number" id="budgetInput" class="input-field" placeholder="预算金额" step="0.01">
+        <div class="modal-buttons">
+            <button class="btn-secondary" id="cancelBudgetBtn">取消</button>
+            <button class="btn-primary" id="confirmBudgetBtn">确认</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
